@@ -22,3 +22,7 @@ app.on("ready", async () => {
   new BrowserWindow({ show: false });
   console.log("App is ready!");
 });
+
+app.on("will-quit", () => {
+  worker.terminate();
+});
