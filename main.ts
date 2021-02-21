@@ -5,7 +5,7 @@ import * as path from "path";
 const worker = createWorker();
 
 const showNotification = async ({title, body, ms = 5000}: {title: string, body: string, ms?: number}) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     // Create the notification
     const notif = new Notification({
       title,
