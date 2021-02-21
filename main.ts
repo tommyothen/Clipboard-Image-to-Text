@@ -36,21 +36,28 @@ app.on("ready", async () => {
   ]));
 
   globalShortcut.register("Alt+Shift+S", async () => {
-    const formats = clipboard.availableFormats("clipboard");
+    try {
+      const formats = clipboard.availableFormats("clipboard");
 
-    if (formats.includes("image/png") || formats.includes("image/jpeg")) {
-      const { data: { text, confidence }} = await worker.recognize(clipboard.readImage().toPNG());
+      if (formats.includes("image/png") || formats.includes("image/jpeg")) {
+        const { data: { text, confidence } } = await worker.recognize(clipboard.readImage().toPNG());
 
-      clipboard.writeText(text);
+        clipboard.writeText(text);
 
+        showNotification({
+          title: 'Successfully Copied Text!',
+          body: `Text extracted with ${confidence}% confidence.`,
+        });
+      } else {
+        showNotification({
+          title: 'No Images Found!',
+          body: 'Could not find any images in the clipboard.',
+        });
+      }
+    } catch (error) {
       showNotification({
-        title: 'Successfully Copied Text!',
-        body: `Text extracted with ${confidence}% confidence.`,
-      });
-    } else {
-      showNotification({
-        title: 'No Images Found!',
-        body: 'Could not find any images in the clipboard.',
+        title: 'Something went wrong!',
+        body: `Please try again soon...`,
       });
     }
   });
