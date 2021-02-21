@@ -1,4 +1,4 @@
-import { app, Tray, Menu } from "electron";
+import { app, Tray, Menu, BrowserWindow } from "electron";
 import * as path from "path";
 
 app.on("ready", async () => {
@@ -11,4 +11,6 @@ app.on("ready", async () => {
       }
     }
   ]));
+
+  new BrowserWindow({ show: false });
 });
