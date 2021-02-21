@@ -4,6 +4,22 @@ import * as path from "path";
 
 const worker = createWorker();
 
+const showNotification = async ({title, body, ms = 5000}: {title: string, body: string, ms?: number}) => {
+  return new Promise((resolve, reject) => {
+    // Create the notification
+    const notif = new Notification({
+      title,
+      body
+    });
+
+    // Show the video then create a timeout to close it
+    notif.show();
+    (new Promise(r => setTimeout(r, ms)))
+      .then(() => notif.close())
+      .then(() => resolve(true));
+  });
+}
+
 app.on("ready", async () => {
   await worker.load();
   await worker.loadLanguage('eng');
@@ -27,23 +43,24 @@ app.on("ready", async () => {
 
       clipboard.writeText(text);
 
-      new Notification({
+      showNotification({
         title: 'Successfully Copied Text!',
         body: `Text extracted with ${confidence}% confidence.`,
-      }).show();
+      });
     } else {
-      new Notification({
+      showNotification({
         title: 'No Images Found!',
         body: 'Could not find any images in the clipboard.',
-      }).show();
+      });
     }
   });
 
   new BrowserWindow({ show: false });
-  new Notification({
+  showNotification({
     title: 'Clipboard Image to Text Extractor',
     body: 'The image to text service has started!',
-  }).show();
+    ms: 10000,
+  });
 });
 
 app.on("will-quit", () => {
