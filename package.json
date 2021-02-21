@@ -1,0 +1,19 @@
+{
+  "name": "clipboard-image-to-text",
+  "version": "1.0.0",
+  "description": "Extract text from an image in the clipboard",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build && electron ./dist/main.js"
+  },
+  "keywords": [],
+  "author": "DaSushiAsian",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^11.3.0"
+  },
+  "dependencies": {
+    "tesseract.js": "2.1.4"
+  }
+}
