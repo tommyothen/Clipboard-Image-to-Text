@@ -1,4 +1,5 @@
 import { app, Tray, Menu, BrowserWindow } from "electron";
+import { createWorker } from "tesseract.js";
 import * as path from "path";
 
 app.on("ready", async () => {
