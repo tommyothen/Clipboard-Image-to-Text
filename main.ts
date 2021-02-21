@@ -1,4 +1,4 @@
-import { app, Tray, Menu, BrowserWindow, globalShortcut, clipboard } from "electron";
+import { app, Tray, Menu, BrowserWindow, globalShortcut, clipboard, Notification } from "electron";
 import { createWorker } from "tesseract.js";
 import * as path from "path";
 
@@ -23,14 +23,22 @@ app.on("ready", async () => {
     const formats = clipboard.availableFormats("clipboard");
 
     if (formats.includes("image/png") || formats.includes("image/jpeg")) {
-      const { data: { text }} = await worker.recognize(clipboard.readImage().toPNG());
+      const { data: { text, confidence }} = await worker.recognize(clipboard.readImage().toPNG());
 
       clipboard.writeText(text);
+
+      new Notification({
+        title: 'Successfully Copied Text!',
+        body: `Text extracted with ${confidence}% confidence.`,
+      }).show();
     }
   });
 
   new BrowserWindow({ show: false });
-  console.log("App is ready!");
+  new Notification({
+    title: 'Clipboard Image to Text Extractor',
+    body: 'The image to text service has started!',
+  }).show();
 });
 
 app.on("will-quit", () => {
