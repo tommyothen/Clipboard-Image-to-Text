@@ -31,6 +31,11 @@ app.on("ready", async () => {
         title: 'Successfully Copied Text!',
         body: `Text extracted with ${confidence}% confidence.`,
       }).show();
+    } else {
+      new Notification({
+        title: 'No Images Found!',
+        body: 'Could not find any images in the clipboard.',
+      }).show();
     }
   });
 
