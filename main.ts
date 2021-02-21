@@ -1,4 +1,4 @@
-import { app, Tray, Menu, BrowserWindow, globalShortcut } from "electron";
+import { app, Tray, Menu, BrowserWindow, globalShortcut, clipboard } from "electron";
 import { createWorker } from "tesseract.js";
 import * as path from "path";
 
@@ -20,9 +20,13 @@ app.on("ready", async () => {
   ]));
 
   globalShortcut.register("Alt+Shift+S", async () => {
-    const { data: { text }} = await worker.recognize("https://tesseract.projectnaptha.com/img/eng_bw.png");
+    const formats = clipboard.availableFormats("clipboard");
 
-    console.log(text);
+    if (formats.includes("image/png") || formats.includes("image/jpeg")) {
+      const { data: { text }} = await worker.recognize(clipboard.readImage().toPNG());
+
+      clipboard.writeText(text);
+    }
   });
 
   new BrowserWindow({ show: false });
