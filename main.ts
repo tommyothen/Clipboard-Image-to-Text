@@ -1,4 +1,4 @@
-import { app, Tray, Menu, BrowserWindow } from "electron";
+import { app, Tray, Menu, BrowserWindow, globalShortcut } from "electron";
 import { createWorker } from "tesseract.js";
 import * as path from "path";
 
@@ -19,10 +19,16 @@ app.on("ready", async () => {
     }
   ]));
 
+  globalShortcut.register("Alt+Shift+S", async () => {
+    const { data: { text }} = await worker.recognize("https://tesseract.projectnaptha.com/img/eng_bw.png");
+
+    console.log(text);
+  });
+
   new BrowserWindow({ show: false });
   console.log("App is ready!");
 });
 
 app.on("will-quit", () => {
-  worker.terminate();
+  worker.terminate()
 });
